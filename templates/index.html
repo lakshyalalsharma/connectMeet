@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ConnectMeet | Connect. Talk. Meet.</title>
+
+    <meta
+        name="description"
+        content="ConnectMeet is a simple browser-based video meeting application with realtime chat."
+    >
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+    <!-- Main CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+    <style>
+        
+    </style>
+</head>
+
+<body>
+
+    <!-- ======================================================
+         NAVBAR
+    ======================================================= -->
+<header class="connect-header">
+    <div class="connect-header-inner">
+
+        <a href="{{ url_for('home') }}" class="connect-brand">
+            <span class="connect-brand-icon">
+                <i class="fa-solid fa-video"></i>
+            </span>
+
+            <span class="connect-brand-text">
+                ConnectMeet
+            </span>
+        </a>
+
+    </div>
+</header>
+
+
+    <!-- ======================================================
+         MAIN CONTENT
+    ======================================================= -->
+
+    <main>
+
+        <!-- ==================================================
+             HERO SECTION
+        =================================================== -->
+
+        <section class="cm-hero">
+
+            <div class="cm-container cm-hero-grid">
+
+                <!-- Hero Content -->
+
+                <div class="cm-hero-content">
+
+                    <div class="cm-badge">
+                        <span class="cm-badge-dot"></span>
+                        Simple. Fast. Real-Time.
+                    </div>
+
+                    <h1 class="cm-hero-title">
+                        Connect.
+                        <span>Talk.</span>
+                        Meet.
+                    </h1>
+
+                    <p class="cm-hero-description">
+                        Simple browser-based video meetings with
+                        realtime audio, video and chat.
+                        No accounts. No scheduling. Just meet.
+                    </p>
+
+
+                    <!-- Meeting Card -->
+
+                    <div class="cm-meeting-card">
+
+                        <div class="cm-meeting-card-header">
+
+                            <div class="cm-meeting-card-icon">
+                                <i class="fa-solid fa-link"></i>
+                            </div>
+
+                            <div>
+                                <h2>Join a Meeting</h2>
+
+                                <p>
+                                    Enter your meeting code to join.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <!-- Join Form -->
+
+                        <form
+                            id="joinMeetingForm"
+                            class="cm-join-form"
+                        >
+
+                            <div class="cm-input-wrapper">
+
+                                <i class="fa-solid fa-key"></i>
+
+                                <input
+                                    type="text"
+                                    id="meetingCode"
+                                    name="meeting_code"
+                                    placeholder="Enter meeting code"
+                                    maxlength="6"
+                                    autocomplete="off"
+                                    required
+                                >
+
+                            </div>
+
+                            <button
+                                type="submit"
+                                class="cm-btn cm-btn-primary cm-btn-full"
+                            >
+                                <span>Join Meeting</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+
+                        </form>
+
+
+                        <!-- Divider -->
+
+                        <div class="cm-divider">
+                            <span>OR</span>
+                        </div>
+
+
+                        <!-- Create Meeting -->
+
+                        <button
+                            type="button"
+                            id="createMeetingBtn"
+                            class="cm-btn cm-btn-secondary cm-btn-full"
+                        >
+                            <i class="fa-solid fa-plus"></i>
+                            <span>Create Instant Meeting</span>
+                        </button>
+
+
+                        <!-- Error -->
+
+                        <div
+                            id="meetingError"
+                            class="cm-form-message cm-error-message"
+                            hidden
+                        >
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================================
+                     HERO VISUAL
+                =================================================== -->
+
+                <div class="cm-hero-visual">
+
+                    <div class="cm-visual-glow cm-glow-one"></div>
+                    <div class="cm-visual-glow cm-glow-two"></div>
+
+
+                    <!-- Main Video Mockup -->
+
+                    <div class="cm-video-window">
+
+                        <div class="cm-video-window-topbar">
+
+                            <div class="cm-window-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+
+                            <span class="cm-window-title">
+                                ConnectMeet
+                            </span>
+
+                            <div class="cm-window-status">
+                                <span></span>
+                                Live
+                            </div>
+
+                        </div>
+
+
+                        <div class="cm-video-grid">
+
+                            <!-- Person 1 -->
+
+                            <div class="cm-video-card cm-video-card-main">
+
+                                <div class="cm-avatar cm-avatar-one">
+                                    L
+                                </div>
+
+                                <div class="cm-video-name">
+                                    <i class="fa-solid fa-microphone"></i>
+                                    Lakshya
+                                </div>
+
+                            </div>
+
+
+                            <!-- Person 2 -->
+
+                            <div class="cm-video-card">
+
+                                <div class="cm-avatar cm-avatar-two">
+                                    S
+                                </div>
+
+                                <div class="cm-video-name">
+                                    <i class="fa-solid fa-microphone"></i>
+                                    Participant
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Mock Controls -->
+
+                        <div class="cm-video-controls">
+
+                            <div class="cm-control">
+                                <i class="fa-solid fa-microphone"></i>
+                            </div>
+
+                            <div class="cm-control">
+                                <i class="fa-solid fa-video"></i>
+                            </div>
+
+                            <div class="cm-control">
+                                <i class="fa-solid fa-message"></i>
+                            </div>
+
+                            <div class="cm-control cm-control-leave">
+                                <i class="fa-solid fa-phone-slash"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Floating Chat Notification -->
+
+                    <div class="cm-floating-card cm-chat-floating">
+
+                        <div class="cm-floating-icon">
+                            <i class="fa-solid fa-message"></i>
+                        </div>
+
+                        <div class="cm-floating-content">
+                            <strong>Realtime Chat</strong>
+                            <span>Hey! Can you hear me?</span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Floating Participant Card -->
+
+                    <div class="cm-floating-card cm-participant-floating">
+
+                        <div class="cm-mini-avatar">
+                            S
+                        </div>
+
+                        <div class="cm-floating-content">
+                            <strong>Participant joined</strong>
+                            <span>Just now</span>
+                        </div>
+
+                        <i class="fa-solid fa-check cm-success-icon"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ======================================================
+             FEATURES SECTION
+        ======================================================= -->
+
+
+
+        <!-- ======================================================
+             HOW IT WORKS
+        ======================================================= -->
+
+        <section class="cm-how-section">
+
+            <div class="cm-container">
+
+                <div class="cm-how-wrapper">
+
+                    <div class="cm-how-content">
+
+                        <span class="cm-section-label">
+                            SIMPLE BY DESIGN
+                        </span>
+
+                        <h2>
+                            Meet in just a few clicks.
+                        </h2>
+
+                        <p>
+                            No account, no calendar and no complicated
+                            setup. Create a room or enter a meeting
+                            code and start talking.
+                        </p>
+
+                        <a
+                            href="#join"
+                            class="cm-text-link"
+                            id="scrollToMeeting"
+                        >
+                            Start a meeting
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+
+                    <div class="cm-steps">
+
+                        <!-- Step 1 -->
+
+                        <div class="cm-step">
+
+                            <div class="cm-step-number">
+                                01
+                            </div>
+
+                            <div class="cm-step-content">
+
+                                <h3>
+                                    Create or enter a room
+                                </h3>
+
+                                <p>
+                                    Generate an instant meeting
+                                    or enter an existing code.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Step 2 -->
+
+                        <div class="cm-step">
+
+                            <div class="cm-step-number">
+                                02
+                            </div>
+
+                            <div class="cm-step-content">
+
+                                <h3>
+                                    Choose your name
+                                </h3>
+
+                                <p>
+                                    Use a temporary display name
+                                    for the meeting.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Step 3 -->
+
+                        <div class="cm-step">
+
+                            <div class="cm-step-number">
+                                03
+                            </div>
+
+                            <div class="cm-step-content">
+
+                                <h3>
+                                    Start talking
+                                </h3>
+
+                                <p>
+                                    Allow camera and microphone
+                                    access and join the conversation.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ======================================================
+             CTA SECTION
+        ======================================================= -->
+
+        <section class="cm-cta">
+
+            <div class="cm-container">
+
+                <div class="cm-cta-card">
+
+                    <div class="cm-cta-content">
+
+                        <span class="cm-section-label">
+                            READY WHEN YOU ARE
+                        </span>
+
+                        <h2>
+                            Let's get connected.
+                        </h2>
+
+                        <p>
+                            Create an instant meeting and start
+                            your conversation right from your browser.
+                        </p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        id="createMeetingBtnCta"
+                        class="cm-btn cm-btn-light"
+                    >
+                        <i class="fa-solid fa-video"></i>
+                        Create Instant Meeting
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ======================================================
+         CREATE MEETING MODAL
+    ======================================================= -->
+
+    <div
+        class="cm-modal"
+        id="meetingCreatedModal"
+        hidden
+    >
+
+        <div
+            class="cm-modal-overlay"
+            id="modalOverlay"
+        ></div>
+
+        <div
+            class="cm-modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="meetingCreatedTitle"
+        >
+
+            <button
+                type="button"
+                class="cm-modal-close"
+                id="closeModalBtn"
+                aria-label="Close"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+
+            <div class="cm-modal-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <span class="cm-modal-label">
+                MEETING CREATED
+            </span>
+
+            <h2 id="meetingCreatedTitle">
+                Your meeting is ready!
+            </h2>
+
+            <p>
+                Share the meeting code or link with the
+                person you want to meet.
+            </p>
+
+
+            <!-- Meeting Code -->
+
+            <div class="cm-room-code-box">
+
+                <span>
+                    Meeting Code
+                </span>
+
+                <strong id="createdRoomCode">
+                    ------
+                </strong>
+
+            </div>
+
+
+            <!-- Meeting Link -->
+
+            <div class="cm-link-box">
+
+                <input
+                    type="text"
+                    id="meetingLink"
+                    readonly
+                >
+
+                <button
+                    type="button"
+                    id="copyMeetingLinkBtn"
+                    aria-label="Copy meeting link"
+                >
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+
+            </div>
+
+
+            <div
+                id="copyMessage"
+                class="cm-copy-message"
+            >
+            </div>
+
+
+            <!-- Join -->
+
+            <button
+                type="button"
+                id="joinCreatedMeetingBtn"
+                class="cm-btn cm-btn-primary cm-btn-full"
+            >
+                Join Now
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ======================================================
+         FOOTER
+    ======================================================= -->
+<footer class="cm-footer">
+
+    <div class="cm-container cm-footer-inner">
+
+        <!-- Brand -->
+        <div class="cm-footer-brand">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="cm-logo"
+            >
+
+                <span class="cm-logo-icon">
+                    <i class="fa-solid fa-video"></i>
+                </span>
+
+                <span class="cm-logo-text">
+                    Connect<span>Meet</span>
+                </span>
+
+            </a>
+
+            <p>
+                Simple. Fast. Real-Time.
+            </p>
+
+            <p class="cm-footer-founder">
+                Made  by <strong>Lakshya Lal Sharma</strong>
+            </p>
+
+        </div>
+
+
+        <!-- Project Information -->
+        <div class="cm-footer-project">
+
+            <span class="cm-footer-label">
+                SUMMER INTERNSHIP PROJECT
+            </span>
+
+            <p>
+                A browser-based real-time communication platform
+                built using modern web technologies.
+            </p>
+
+        </div>
+
+
+        <!-- Copyright -->
+        <div class="cm-footer-copy">
+
+            <p>
+                &copy; 2026 ConnectMeet
+            </p>
+
+            <p>
+                Flask &bull; Socket.IO &bull; WebRTC
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+    <!-- Main JavaScript -->
+    <script
+        src="{{ url_for('static', filename='js/app.js') }}"
+    ></script>
+
+</body>
+</html>

@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Meeting Room {{ room_code }} | ConnectMeet
+    </title>
+
+    <meta
+        name="description"
+        content="ConnectMeet video meeting room."
+    >
+
+    <!-- Google Font -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    >
+
+    <!-- Room CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/room.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- ======================================================
+         ROOM APPLICATION
+    ======================================================= -->
+
+    <div class="cm-room-app">
+
+
+        <!-- ==================================================
+             ROOM HEADER
+        =================================================== -->
+
+        <header class="cm-room-header">
+
+            <!-- Brand -->
+
+            <a
+                href="{{ url_for('home') }}"
+                class="cm-room-brand"
+            >
+
+                <span class="cm-room-brand-icon">
+                    <i class="fa-solid fa-video"></i>
+                </span>
+
+                <span class="cm-room-brand-name">
+                    Connect<span>Meet</span>
+                </span>
+
+            </a>
+
+
+            <!-- Room Information -->
+
+            <div class="cm-room-info">
+
+                <div class="cm-room-code-display">
+
+                    <span class="cm-room-info-label">
+                        ROOM
+                    </span>
+
+                    <strong id="roomCodeDisplay">
+                        {{ room_code }}
+                    </strong>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="copyRoomCodeBtn"
+                    class="cm-room-copy-btn"
+                    title="Copy meeting code"
+                    aria-label="Copy meeting code"
+                >
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+
+                <span
+                    id="roomCodeCopyMessage"
+                    class="cm-room-copy-message"
+                ></span>
+
+            </div>
+
+
+            <!-- Connection Status -->
+
+            <div class="cm-connection-status">
+
+                <span
+                    id="connectionStatusDot"
+                    class="cm-status-dot"
+                ></span>
+
+                <span id="connectionStatusText">
+                    Connecting...
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ==================================================
+             MAIN ROOM
+        =================================================== -->
+
+        <main class="cm-room-main">
+
+
+            <!-- ==============================================
+                 VIDEO AREA
+            =============================================== -->
+
+            <section
+                class="cm-video-section"
+                id="videoSection"
+            >
+
+                <!-- ==========================================
+                     LOCAL VIDEO
+                =========================================== -->
+
+                <div
+                    class="cm-video-tile cm-local-video-tile"
+                    id="localVideoTile"
+                >
+
+                    <video
+                        id="localVideo"
+                        autoplay
+                        playsinline
+                        muted
+                    ></video>
+
+
+                    <!-- Local Video Placeholder -->
+
+                    <div
+                        class="cm-video-placeholder"
+                        id="localVideoPlaceholder"
+                    >
+
+                        <div class="cm-placeholder-avatar">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+
+                        <span>
+                            Camera is off
+                        </span>
+
+                    </div>
+
+
+                    <!-- Local Name -->
+
+                    <div class="cm-video-user-label">
+
+                        <span
+                            class="cm-video-mic-indicator"
+                            id="localMicIndicator"
+                        >
+                            <i class="fa-solid fa-microphone"></i>
+                        </span>
+
+                        <span id="localParticipantName">
+                            You
+                        </span>
+
+                    </div>
+
+
+                    <!-- Local Status -->
+
+                    <div class="cm-video-status-badge">
+                        YOU
+                    </div>
+
+                </div>
+
+
+
+                <!-- ==========================================
+                     REMOTE VIDEO
+                =========================================== -->
+
+                <div
+                    class="cm-video-tile cm-remote-video-tile"
+                    id="remoteVideoTile"
+                >
+
+                    <video
+                        id="remoteVideo"
+                        autoplay
+                        playsinline
+                    ></video>
+
+
+                    <!-- Remote Placeholder -->
+
+                    <div
+                        class="cm-video-placeholder"
+                        id="remoteVideoPlaceholder"
+                    >
+
+                        <div class="cm-placeholder-avatar">
+                            <i class="fa-solid fa-user-group"></i>
+                        </div>
+
+                        <strong>
+                            Waiting for someone to join
+                        </strong>
+
+                        <span>
+                            Share the meeting code with another participant.
+                        </span>
+
+                    </div>
+
+
+                    <!-- Remote Name -->
+
+                    <div class="cm-video-user-label">
+
+                        <span
+                            class="cm-video-mic-indicator"
+                            id="remoteMicIndicator"
+                        >
+                            <i class="fa-solid fa-microphone"></i>
+                        </span>
+
+                        <span id="remoteParticipantName">
+                            Participant
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     NO CAMERA / CONNECTION MESSAGE
+                =========================================== -->
+
+                <div
+                    id="videoErrorMessage"
+                    class="cm-video-error"
+                    hidden
+                >
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <span id="videoErrorText">
+                        Unable to access your camera or microphone.
+                    </span>
+
+                    <button
+                        type="button"
+                        id="retryMediaBtn"
+                        class="cm-retry-btn"
+                    >
+                        Try Again
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==============================================
+                 SIDE PANEL
+            =============================================== -->
+
+            <aside
+                class="cm-side-panel"
+                id="sidePanel"
+            >
+
+
+                <!-- ==========================================
+                     PARTICIPANTS PANEL
+                =========================================== -->
+
+                <section
+                    class="cm-panel cm-participants-panel"
+                    id="participantsPanel"
+                >
+
+                    <div class="cm-panel-header">
+
+                        <div>
+
+                            <h2>
+                                Participants
+                            </h2>
+
+                            <span
+                                id="participantCount"
+                                class="cm-panel-subtitle"
+                            >
+                                1 participant
+                            </span>
+
+                        </div>
+
+                        <div class="cm-panel-header-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="cm-participant-list"
+                        id="participantList"
+                    >
+
+                        <!-- Local participant -->
+
+                        <div
+                            class="cm-participant-item cm-current-participant"
+                            id="localParticipantItem"
+                        >
+
+                            <div class="cm-participant-avatar">
+                                <span id="localParticipantAvatar">
+                                    Y
+                                </span>
+                            </div>
+
+                            <div class="cm-participant-details">
+
+                                <strong id="localParticipantListName">
+                                    You
+                                </strong>
+
+                                <span>
+                                    You
+                                </span>
+
+                            </div>
+
+                            <div class="cm-participant-state">
+                                <i
+                                    class="fa-solid fa-microphone"
+                                    id="localParticipantMicState"
+                                ></i>
+                            </div>
+
+                        </div>
+
+                        <!-- Remote participants will be
+                             inserted by room.js -->
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- ==========================================
+                     CHAT PANEL
+                =========================================== -->
+
+                <section
+                    class="cm-panel cm-chat-panel"
+                    id="chatPanel"
+                >
+
+                    <div class="cm-panel-header">
+
+                        <div>
+
+                            <h2>
+                                Chat
+                            </h2>
+
+                            <span class="cm-panel-subtitle">
+                                Realtime messages
+                            </span>
+
+                        </div>
+
+                        <div class="cm-panel-header-icon">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Messages -->
+
+                    <div
+                        class="cm-chat-messages"
+                        id="chatMessages"
+                    >
+
+                        <div class="cm-chat-empty">
+
+                            <div class="cm-chat-empty-icon">
+                                <i class="fa-regular fa-comments"></i>
+                            </div>
+
+                            <strong>
+                                No messages yet
+                            </strong>
+
+                            <span>
+                                Send a message to start the conversation.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Chat Input -->
+
+                    <form
+                        class="cm-chat-form"
+                        id="chatForm"
+                    >
+
+                        <div class="cm-chat-input-wrapper">
+
+                            <input
+                                type="text"
+                                id="chatInput"
+                                name="message"
+                                placeholder="Type a message..."
+                                maxlength="1000"
+                                autocomplete="off"
+                            >
+
+                            <button
+                                type="submit"
+                                id="sendChatBtn"
+                                aria-label="Send message"
+                                title="Send message"
+                            >
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+            </aside>
+
+        </main>
+
+
+
+        <!-- ==================================================
+             MEETING CONTROLS
+        =================================================== -->
+
+        <footer class="cm-meeting-controls">
+
+            <div class="cm-controls-left">
+
+                <!-- Microphone -->
+
+                <button
+                    type="button"
+                    id="toggleMicBtn"
+                    class="cm-control-btn"
+                    title="Mute microphone"
+                    aria-label="Mute microphone"
+                >
+
+                    <i
+                        class="fa-solid fa-microphone"
+                        id="micIcon"
+                    ></i>
+
+                    <span class="cm-control-label">
+                        Mute
+                    </span>
+
+                </button>
+
+
+                <!-- Camera -->
+
+                <button
+                    type="button"
+                    id="toggleCameraBtn"
+                    class="cm-control-btn"
+                    title="Turn camera off"
+                    aria-label="Turn camera off"
+                >
+
+                    <i
+                        class="fa-solid fa-video"
+                        id="cameraIcon"
+                    ></i>
+
+                    <span class="cm-control-label">
+                        Camera
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <!-- Center Room Info -->
+
+            <div class="cm-controls-center">
+
+                <span class="cm-controls-room-label">
+                    Room
+                </span>
+
+                <strong>
+                    {{ room_code }}
+                </strong>
+
+            </div>
+
+
+            <div class="cm-controls-right">
+
+                <!-- Chat Toggle -->
+
+                <button
+                    type="button"
+                    id="toggleChatBtn"
+                    class="cm-control-btn"
+                    title="Toggle chat"
+                    aria-label="Toggle chat"
+                >
+
+                    <i class="fa-solid fa-message"></i>
+
+                    <span class="cm-control-label">
+                        Chat
+                    </span>
+
+                    <span
+                        id="chatUnreadBadge"
+                        class="cm-unread-badge"
+                        hidden
+                    >
+                        0
+                    </span>
+
+                </button>
+
+
+                <!-- Leave -->
+
+                <button
+                    type="button"
+                    id="leaveMeetingBtn"
+                    class="cm-control-btn cm-leave-btn"
+                    title="Leave meeting"
+                    aria-label="Leave meeting"
+                >
+
+                    <i class="fa-solid fa-phone-slash"></i>
+
+                    <span class="cm-control-label">
+                        Leave
+                    </span>
+
+                </button>
+
+            </div>
+
+        </footer>
+
+    </div>
+
+
+
+    <!-- ======================================================
+         NAME MODAL
+    ======================================================= -->
+
+    <div
+        class="cm-room-modal"
+        id="nameModal"
+        hidden
+    >
+
+        <div class="cm-room-modal-overlay"></div>
+
+
+        <div
+            class="cm-room-modal-content"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="nameModalTitle"
+        >
+
+            <div class="cm-room-modal-icon">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <span class="cm-room-modal-label">
+                JOIN MEETING
+            </span>
+
+            <h2 id="nameModalTitle">
+                What's your name?
+            </h2>
+
+            <p>
+                Enter a temporary display name for this meeting.
+                No account is required.
+            </p>
+
+
+            <form id="nameForm">
+
+                <label
+                    for="displayName"
+                    class="cm-field-label"
+                >
+                    Display name
+                </label>
+
+                <div class="cm-name-input-wrapper">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <input
+                        type="text"
+                        id="displayName"
+                        name="display_name"
+                        placeholder="Enter your name"
+                        maxlength="40"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+                <div
+                    id="nameError"
+                    class="cm-name-error"
+                    hidden
+                ></div>
+
+
+                <button
+                    type="submit"
+                    id="joinRoomBtn"
+                    class="cm-btn-room cm-btn-room-primary"
+                >
+
+                    <span>
+                        Join Room
+                    </span>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ======================================================
+         LEAVE CONFIRMATION MODAL
+    ======================================================= -->
+
+    <div
+        class="cm-room-modal"
+        id="leaveModal"
+        hidden
+    >
+
+        <div class="cm-room-modal-overlay"></div>
+
+
+        <div
+            class="cm-room-modal-content cm-leave-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="leaveModalTitle"
+        >
+
+            <div class="cm-leave-modal-icon">
+                <i class="fa-solid fa-phone-slash"></i>
+            </div>
+
+            <h2 id="leaveModalTitle">
+                Leave meeting?
+            </h2>
+
+            <p>
+                Are you sure you want to leave this meeting?
+            </p>
+
+
+            <div class="cm-leave-actions">
+
+                <button
+                    type="button"
+                    id="cancelLeaveBtn"
+                    class="cm-btn-room cm-btn-room-secondary"
+                >
+                    Stay
+                </button>
+
+                <button
+                    type="button"
+                    id="confirmLeaveBtn"
+                    class="cm-btn-room cm-btn-room-danger"
+                >
+                    Leave Meeting
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ======================================================
+         ROOM TOAST
+    ======================================================= -->
+
+    <div
+        id="roomToast"
+        class="cm-room-toast"
+        hidden
+    >
+
+        <div class="cm-toast-icon">
+            <i class="fa-solid fa-info"></i>
+        </div>
+
+        <div class="cm-toast-content">
+
+            <strong id="toastTitle">
+                ConnectMeet
+            </strong>
+
+            <span id="toastMessage">
+                Notification
+            </span>
+
+        </div>
+
+        <button
+            type="button"
+            id="closeToastBtn"
+            aria-label="Close notification"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+    </div>
+
+
+
+    <!-- ======================================================
+         SOCKET.IO
+    ======================================================= -->
+
+    <script
+        src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+    ></script>
+
+
+    <!-- ======================================================
+         ROOM DATA
+    ======================================================= -->
+
+    <script>
+
+        window.CONNECTMEET_CONFIG = {
+            roomCode: "{{ room_code }}"
+        };
+
+    </script>
+
+
+    <!-- ======================================================
+         ROOM JAVASCRIPT
+    ======================================================= -->
+
+    <script
+        src="{{ url_for('static', filename='js/room.js') }}"
+    ></script>
+
+</body>
+</html>
